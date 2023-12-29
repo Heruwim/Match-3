@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1087817824771501793}
   - component: {fileID: 2776726223108253467}
-  - component: {fileID: 6487426344097574495}
+  - component: {fileID: -8331489721769432419}
   m_Layer: 0
   m_Name: TileDackground
   m_TagString: Untagged
@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 6864925882479760336}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.03, y: -0.64, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -170,7 +170,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6487426344097574495
+--- !u!114 &-8331489721769432419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,12 +182,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c47d7f8c4ead3d241b744569ebd531ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dots:
-  - {fileID: 6429749027827078739, guid: eb78bad15aaaab54daaab26497098ae5, type: 3}
-  - {fileID: 8093547084641246397, guid: a5e60e5509fd15e449ae044d2ce36a83, type: 3}
-  - {fileID: 9115105912559497170, guid: cf13cc6a823bf584a8324a9ebbf3a2ff, type: 3}
-  - {fileID: 2381241117500815182, guid: e44dadc0014cb8e44aa83e14fe9d680d, type: 3}
-  - {fileID: 4137473528159311850, guid: e13c4bfc2528a784eb10843993beb3a5, type: 3}
-  - {fileID: 1497798217695615875, guid: 76eca7cbc997e57449c64f120a7cfc2c, type: 3}
-  - {fileID: 4631516898626375689, guid: 80597807880eac147841af3c9598887d, type: 3}
-  - {fileID: 3382886513851261358, guid: fd578a0bb40181e498a43b418931afe5, type: 3}

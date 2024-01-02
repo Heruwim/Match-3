@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Dot : MonoBehaviour
@@ -69,6 +70,22 @@ public class Dot : MonoBehaviour
         }
     }
 
+    public IEnumerator CheckMoveCorutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (_otherDot != null)
+        {
+            if (!_isMatched && !_otherDot.GetComponent<Dot>()._isMatched)
+            {
+                _otherDot.GetComponent<Dot>()._row = _row;
+                _otherDot.GetComponent<Dot>()._column = _column;
+                _row = _previousRow; 
+                _column = _previousColumn;
+            }
+            _otherDot = null;
+        }
+    }
+
     private void OnMouseDown()
     {
         _firstTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -90,14 +107,14 @@ public class Dot : MonoBehaviour
 
     private void MovePieces()
     {
-        if(_swipeAngle > -45 && _swipeAngle <= 45 && _column < _board.Width)
+        if(_swipeAngle > -45 && _swipeAngle <= 45 && _column < _board.Width - 1)
         {
             //Right swipe
             _otherDot = _board.AllDots[_column + 1, _row];
             _otherDot.GetComponent<Dot>()._column -= 1;
             _column += 1;
         }
-        else if(_swipeAngle > 45 && _swipeAngle <= 135 && _row < _board.Height)
+        else if(_swipeAngle > 45 && _swipeAngle <= 135 && _row < _board.Height - 1)
         {
             //Up swipe
             _otherDot = _board.AllDots[_column, _row + 1];
@@ -118,6 +135,8 @@ public class Dot : MonoBehaviour
             _otherDot.GetComponent<Dot>()._row += 1;
             _row -= 1;
         }
+
+        StartCoroutine(CheckMoveCorutine());
     }
 
     private void FindMatches()

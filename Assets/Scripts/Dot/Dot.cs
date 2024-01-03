@@ -20,6 +20,8 @@ public class Dot : MonoBehaviour
     private GameObject _otherDot;
     private Board _board;
 
+    public bool IsMatches => _isMatched;
+
     private void Start()
     {
         _board = FindObjectOfType<Board>();
@@ -82,6 +84,10 @@ public class Dot : MonoBehaviour
                 _otherDot.GetComponent<Dot>()._column = _column;
                 _row = _previousRow; 
                 _column = _previousColumn;
+            }
+            else
+            {
+                _board.DestroyMatches();
             }
             _otherDot = null;
         }

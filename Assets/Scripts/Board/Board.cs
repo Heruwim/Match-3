@@ -1,4 +1,5 @@
-    using UnityEngine;
+using System.Collections;
+using UnityEngine;
 
 public class Board : MonoBehaviour
 {
@@ -11,8 +12,16 @@ public class Board : MonoBehaviour
 
     private BackgroundTile[,] _allTiles;
 
-    public int Width => _width;
-    public int Height => _height;
+    public int Width
+    {
+        get { return _width; }
+        set { _width = value; }
+    }
+    public int Height
+    {
+        get { return _height; }
+        set { _height = value; }
+    }
 
     private void Start()
     {
@@ -106,5 +115,28 @@ public class Board : MonoBehaviour
                 }
             }
         }
+        StartCoroutine(DecreaseRowCorutine());
+    }
+
+    private IEnumerator DecreaseRowCorutine()
+    {
+        int nullCount = 0;
+        for (int i = 0; i < _width; i++)
+        {
+            for (int j = 0; j < _height; j++)
+            {
+                if (AllDots[i, j] == null)
+                {
+                    nullCount++;
+                }
+                else if(nullCount > 0)
+                {
+                    AllDots[i, j].GetComponent<Dot>().Row -= nullCount;
+                    AllDots[i, j] = null;
+                }
+            }
+            nullCount = 0;
+        }
+        yield return new WaitForSeconds(0.4f);
     }
 }

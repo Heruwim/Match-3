@@ -6,6 +6,7 @@ public class Dot : MonoBehaviour
     [Header("Board Variables")]
     [SerializeField] private float _swipeAngle = 0f;
     [SerializeField] private float _swipeResist = 1f;
+    [SerializeField] private float _delayTime  = 0.6f;
     [SerializeField] private int _column;
     [SerializeField] private int _row;
     [SerializeField] private int _previousColumn;
@@ -21,6 +22,12 @@ public class Dot : MonoBehaviour
     private Board _board;
 
     public bool IsMatches => _isMatched;
+    
+    public int Row
+    {
+        get { return _row; }
+        set { _row = value; }
+    }
 
     private void Start()
     {
@@ -48,7 +55,12 @@ public class Dot : MonoBehaviour
         {
             //Move towards the target
             _tempPosition = new Vector2(_targetX, transform.position.y);
-            transform.position = Vector2.Lerp(transform.position, _tempPosition, 0.4f);
+            transform.position = Vector2.Lerp(transform.position, _tempPosition, _delayTime);
+
+            if (_board.AllDots[_column, _row] != this.gameObject)
+            {
+                _board.AllDots[_column, _row] = this.gameObject;
+            }
         }
         else
         {
@@ -62,14 +74,18 @@ public class Dot : MonoBehaviour
         {
             //Move towards the target
             _tempPosition = new Vector2(transform.position.x, _targetY);
-            transform.position = Vector2.Lerp(transform.position, _tempPosition, 0.4f);
+            transform.position = Vector2.Lerp(transform.position, _tempPosition, _delayTime);
+
+            if (_board.AllDots[_column, _row] != this.gameObject)
+            {
+                _board.AllDots[_column, _row] = this.gameObject;
+            }
         }
         else
         {
             //Directly set the position
             _tempPosition = new Vector2(transform.position.x, _targetY);
             transform.position = _tempPosition;
-            _board.AllDots[_column, _row] = this.gameObject;
         }
     }
 

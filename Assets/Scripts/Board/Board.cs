@@ -96,7 +96,7 @@ public class Board : MonoBehaviour
 
     private void DestroyMatchesAt(int column, int row)
     {
-        if (AllDots[column, row].GetComponent<Dot>().IsMatches)
+        if (AllDots[column, row].GetComponent<Dot>().IsMatched)
         {
             Destroy(AllDots[column, row]);
             AllDots[column, row] = null;
@@ -138,5 +138,52 @@ public class Board : MonoBehaviour
             nullCount = 0;
         }
         yield return new WaitForSeconds(0.4f);
+        StartCoroutine(FillBoardCorutine());
     }
+
+    private void RefilldBoard()
+    {
+        for (int i = 0; i < _width; i++)
+        {
+            for (int j = 0; j < _height; j++)
+            {
+                if (AllDots[i, j] == null)
+                {
+                    Vector2 tempPosition = new Vector2(i, j);
+                    int dotToUse = Random.Range(0, _dots.Length);
+                    GameObject piece = Instantiate(_dots[dotToUse], tempPosition, Quaternion.identity);
+                    AllDots[i, j] = piece;
+                }
+            }
+        }
+    }
+
+    private bool MatchesOnBoard()
+    {
+        for (int i = 0; i < _width; i++)
+        {
+            for (int j = 0; j < _height; j++)
+            {
+                if (AllDots[i, j] != null)
+                {
+                    if (AllDots[i, j].GetComponent<Dot>().IsMatched)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private IEnumerator FillBoardCorutine()
+    {
+        RefilldBoard();
+        yield return new WaitForSeconds(0.5f);
+        while (MatchesOnBoard())
+        {
+            yield return new WaitForSeconds(0.5f);
+            DestroyMatches();
+        }
+    } 
 }

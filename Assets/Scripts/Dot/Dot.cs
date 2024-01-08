@@ -21,7 +21,7 @@ public class Dot : MonoBehaviour
     private GameObject _otherDot;
     private Board _board;
 
-    public bool IsMatches => _isMatched;
+    public bool IsMatched => _isMatched;
     
     public int Row
     {

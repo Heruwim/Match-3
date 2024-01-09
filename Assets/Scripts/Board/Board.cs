@@ -5,6 +5,7 @@ public class Board : MonoBehaviour
 {
     [SerializeField] private int _width;
     [SerializeField] private int _height;
+    [SerializeField] private int _offSet;
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private GameObject[] _dots;
     
@@ -37,7 +38,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < _height; j++)
             {
-                Vector2 tempPosition = new Vector2(i, j);
+                Vector2 tempPosition = new Vector2(i, j + _offSet);
                 GameObject backgroundTile = Instantiate(_tilePrefab, tempPosition, Quaternion.identity) as GameObject;
                 backgroundTile.transform.parent = this.transform;
                 backgroundTile.name = "(" + i + ", " + j + ")";
@@ -51,6 +52,8 @@ public class Board : MonoBehaviour
                 maxIterations = 0;
 
                 GameObject dot = Instantiate(_dots[dotToUse], tempPosition, Quaternion.identity);
+                dot.GetComponent<Dot>().Row = j;
+                dot.GetComponent<Dot>().Column = i;
                 dot.transform.parent = this.transform;
                 dot.name = "(" + i + ", " + j + ")";
                 AllDots[i, j] = dot;
@@ -149,10 +152,12 @@ public class Board : MonoBehaviour
             {
                 if (AllDots[i, j] == null)
                 {
-                    Vector2 tempPosition = new Vector2(i, j);
+                    Vector2 tempPosition = new Vector2(i, j + _offSet);
                     int dotToUse = Random.Range(0, _dots.Length);
                     GameObject piece = Instantiate(_dots[dotToUse], tempPosition, Quaternion.identity);
                     AllDots[i, j] = piece;
+                    piece.GetComponent<Dot>().Row = j;
+                    piece.GetComponent<Dot>().Column = i;
                 }
             }
         }

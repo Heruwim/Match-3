@@ -28,16 +28,21 @@ public class Dot : MonoBehaviour
         get { return _row; }
         set { _row = value; }
     }
+    public int Column
+    {
+        get { return _column; }
+        set { _column = value; }
+
+    }
 
     private void Start()
     {
         _board = FindObjectOfType<Board>();
-        _targetX = (int)transform.position.x;
-        _targetY = (int)transform.position.y;
-        _row = _targetY;
-        _column = _targetX;
-        _previousColumn = _column;
-        _previousRow = _row;
+        //_targetX = (int)transform.position.x;
+        //_targetY = (int)transform.position.y;
+        //_row = _targetY;
+        //_column = _targetX;
+
     }
 
     private void Update()
@@ -136,6 +141,8 @@ public class Dot : MonoBehaviour
         {
             //Right swipe
             _otherDot = _board.AllDots[_column + 1, _row];
+            _previousColumn = _column;
+            _previousRow = _row;
             _otherDot.GetComponent<Dot>()._column -= 1;
             _column += 1;
         }
@@ -143,6 +150,8 @@ public class Dot : MonoBehaviour
         {
             //Up swipe
             _otherDot = _board.AllDots[_column, _row + 1];
+            _previousColumn = _column;
+            _previousRow = _row;
             _otherDot.GetComponent<Dot>()._row -= 1;
             _row += 1;
         }
@@ -150,6 +159,8 @@ public class Dot : MonoBehaviour
         {
             //Left swipe
             _otherDot = _board.AllDots[_column - 1, _row];
+            _previousColumn = _column;
+            _previousRow = _row;
             _otherDot.GetComponent<Dot>()._column += 1;
             _column -= 1;
         }
@@ -157,6 +168,8 @@ public class Dot : MonoBehaviour
         {
             //Down swipe
             _otherDot = _board.AllDots[_column, _row - 1];
+            _previousColumn = _column;
+            _previousRow = _row;
             _otherDot.GetComponent<Dot>()._row += 1;
             _row -= 1;
         }

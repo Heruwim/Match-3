@@ -16,6 +16,7 @@ public class Board : MonoBehaviour
     [SerializeField] private GameObject[] _dots;
     
     public GameObject[,] AllDots;
+    public GameObject DestroyEffect;
     public GameState CurreState = GameState.move;
 
     private BackgroundTile[,] _allTiles;
@@ -111,6 +112,8 @@ public class Board : MonoBehaviour
         if (AllDots[column, row].GetComponent<Dot>().IsMatched)
         {
             _findMatces.CurrentMatches.Remove(AllDots[column, row]);
+            GameObject particle = Instantiate(DestroyEffect, AllDots[column, row].transform.position, Quaternion.identity);
+            Destroy(particle, 0.5f );
             Destroy(AllDots[column, row]);
             AllDots[column, row] = null;
         }

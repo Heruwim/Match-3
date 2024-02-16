@@ -1,6 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
+public enum GameState
+{
+    wait,
+    move
+}
+
 public class Board : MonoBehaviour
 {
     [SerializeField] private int _width;
@@ -10,8 +16,10 @@ public class Board : MonoBehaviour
     [SerializeField] private GameObject[] _dots;
     
     public GameObject[,] AllDots;
+    public GameState CurreState = GameState.move;
 
     private BackgroundTile[,] _allTiles;
+    private FindMatces _findMatces;
 
     public int Width
     {
@@ -26,6 +34,7 @@ public class Board : MonoBehaviour
 
     private void Start()
     {
+        _findMatces = FindObjectOfType<FindMatces>();
         _allTiles = new BackgroundTile[_width, _height];
         AllDots = new GameObject[_width, _height];
 
@@ -101,6 +110,7 @@ public class Board : MonoBehaviour
     {
         if (AllDots[column, row].GetComponent<Dot>().IsMatched)
         {
+            _findMatces.CurrentMatches.Remove(AllDots[column, row]);
             Destroy(AllDots[column, row]);
             AllDots[column, row] = null;
         }
@@ -190,5 +200,7 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             DestroyMatches();
         }
+        yield return new WaitForSeconds(0.5f);
+        CurreState = GameState.move;
     } 
 }

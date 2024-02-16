@@ -123,6 +123,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &394279267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 394279268}
+  - component: {fileID: 394279269}
+  m_Layer: 0
+  m_Name: MatchFinder
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &394279268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394279267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &394279269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394279267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 397bc3d9f17239144bf2d883751c9cf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentMatches: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,6 +291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _width: 7
   _height: 10
+  _offSet: 20
   _tilePrefab: {fileID: 7062958839349027884, guid: 991b8634418906d4184dac59fdb063c8, type: 3}
   _dots:
   - {fileID: 3409136337633830971, guid: eb78bad15aaaab54daaab26497098ae5, type: 3}
@@ -256,6 +302,7 @@ MonoBehaviour:
   - {fileID: 4815556017160015273, guid: 76eca7cbc997e57449c64f120a7cfc2c, type: 3}
   - {fileID: 4694309077285948463, guid: 80597807880eac147841af3c9598887d, type: 3}
   - {fileID: 2826707034491551688, guid: fd578a0bb40181e498a43b418931afe5, type: 3}
+  CurreState: 1
 --- !u!4 &882595875
 Transform:
   m_ObjectHideFlags: 0
@@ -277,3 +324,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 882595875}
+  - {fileID: 394279268}

@@ -15,29 +15,34 @@ public class Dot : MonoBehaviour
     [SerializeField] private int _targetY;
     [SerializeField] private bool _isMatched = false;
 
+    private FindMatces _findMatces;
     private Vector2 _firstTouchPosition;
     private Vector2 _finalTouchPosition;
     private Vector2 _tempPosition;
     private GameObject _otherDot;
     private Board _board;
 
-    public bool IsMatched => _isMatched;
+    public bool IsMatched
+    {
+        get => _isMatched;
+        set => _isMatched = value; 
+    }
     
     public int Row
     {
-        get { return _row; }
-        set { _row = value; }
+        get => _row;
+        set => _row = value;
     }
     public int Column
     {
-        get { return _column; }
-        set { _column = value; }
-
+        get => _column;
+        set => _column = value;
     }
 
     private void Start()
     {
         _board = FindObjectOfType<Board>();
+        _findMatces = FindObjectOfType<FindMatces>();
         //_targetX = (int)transform.position.x;
         //_targetY = (int)transform.position.y;
         //_row = _targetY;
@@ -47,7 +52,7 @@ public class Dot : MonoBehaviour
 
     private void Update()
     {
-        FindMatches();
+        //FindMatches();
         if (_isMatched)
         {
             SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
@@ -66,6 +71,7 @@ public class Dot : MonoBehaviour
             {
                 _board.AllDots[_column, _row] = this.gameObject;
             }
+            _findMatces.FindAllMatches();
         }
         else
         {
@@ -85,6 +91,8 @@ public class Dot : MonoBehaviour
             {
                 _board.AllDots[_column, _row] = this.gameObject;
             }
+            _findMatces.FindAllMatches();
+
         }
         else
         {
@@ -105,6 +113,8 @@ public class Dot : MonoBehaviour
                 _otherDot.GetComponent<Dot>()._column = _column;
                 _row = _previousRow; 
                 _column = _previousColumn;
+                yield return new WaitForSeconds(0.5f);
+                _board.CurreState = GameState.move;
             }
             else
             {
@@ -116,14 +126,21 @@ public class Dot : MonoBehaviour
 
     private void OnMouseDown()
     {
-        _firstTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //Debug.Log(_firstTouchPosition);
+        if (_board.CurreState == GameState.move)
+        {
+            _firstTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);   
+        }
     }
 
     private void OnMouseUp()
     {
-        _finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        CalculateAngle();
+        if (_board.CurreState == GameState.move)
+        {
+           _finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+           CalculateAngle(); 
+        }
+
+        
     }
 
     private void CalculateAngle()
@@ -132,6 +149,11 @@ public class Dot : MonoBehaviour
         {
             _swipeAngle = Mathf.Atan2(_finalTouchPosition.y - _firstTouchPosition.y, _finalTouchPosition.x - _firstTouchPosition.x) * 180 / Mathf.PI;
             MovePieces();
+            _board.CurreState = GameState.wait;
+        }
+        else
+        {
+            _board.CurreState = GameState.move;
         }
     }
 

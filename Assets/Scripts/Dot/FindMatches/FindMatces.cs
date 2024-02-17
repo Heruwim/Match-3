@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class FindMatces : MonoBehaviour
 {
@@ -36,6 +37,13 @@ public class FindMatces : MonoBehaviour
                         {
                             if(leftDot.tag == currentDot.tag && rightDot.tag == currentDot.tag)
                             {
+                                if(currentDot.GetComponent<Dot>().IsRowBomb
+                                    || leftDot.GetComponent<Dot>().IsRowBomb
+                                    || rightDot.GetComponent<Dot>().IsRowBomb)
+                                {
+                                    CurrentMatches.Union(GetRowPieces(j));
+                                }
+
                                 if (!CurrentMatches.Contains(leftDot))
                                 {
                                     CurrentMatches.Add(leftDot);
@@ -85,5 +93,34 @@ public class FindMatces : MonoBehaviour
                 }
             }
         }
+    }
+
+    private List<GameObject> GetColumnPieces(int column)
+    {
+        List<GameObject> dots = new List<GameObject>();
+        for (int i = 0; i < _board.Height; i++)
+        {
+            if (_board.AllDots[column, i] != null)
+            {
+                dots.Add(_board.AllDots[column, i]);
+                _board.AllDots[column, i].GetComponent<Dot>().IsMatched = true;
+            }
+        }
+
+        return dots;
+    }
+    private List<GameObject> GetRowPieces(int row)
+    {
+        List<GameObject> dots = new List<GameObject>();
+        for (int i = 0; i < _board.Width; i++)
+        {
+            if (_board.AllDots[i, row] != null)
+            {
+                dots.Add(_board.AllDots[i, row]);
+                _board.AllDots[i, row].GetComponent<Dot>().IsMatched = true;
+            }
+        }
+
+        return dots;
     }
 }

@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class Dot : MonoBehaviour
 {
-    [Header("Board Variables")]
+    [Header("Swipe Stuff")]
     [SerializeField] private float _swipeAngle = 0f;
     [SerializeField] private float _swipeResist = 1f;
+
+    [Header("Board Variables")]
     [SerializeField] private float _delayTime  = 0.6f;
     [SerializeField] private int _column;
     [SerializeField] private int _row;
@@ -22,6 +24,12 @@ public class Dot : MonoBehaviour
     private GameObject _otherDot;
     private Board _board;
 
+    [Header("Powerup Stuff")]
+    [SerializeField] private GameObject _rowArrow;
+    [SerializeField] private GameObject _colunmArrow;
+
+    public bool IsColumnBomb;
+    public bool IsRowBomb;
     public bool IsMatched
     {
         get => _isMatched;
@@ -41,6 +49,8 @@ public class Dot : MonoBehaviour
 
     private void Start()
     {
+        IsColumnBomb = false;
+        IsRowBomb = false;
         _board = FindObjectOfType<Board>();
         _findMatces = FindObjectOfType<FindMatces>();
         //_targetX = (int)transform.position.x;
@@ -50,9 +60,18 @@ public class Dot : MonoBehaviour
 
     }
 
+    // This is for testing and Debug only.
+    private void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            IsRowBomb = true;
+            GameObject arrow = Instantiate(_rowArrow, transform.position, Quaternion.identity);
+            arrow.transform.parent = this.transform;
+        }
+    }
     private void Update()
     {
-        //FindMatches();
         if (_isMatched)
         {
             SpriteRenderer mySprite = GetComponent<SpriteRenderer>();

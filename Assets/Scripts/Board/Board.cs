@@ -18,6 +18,7 @@ public class Board : MonoBehaviour
     public GameObject[,] AllDots;
     public GameObject DestroyEffect;
     public GameState CurreState = GameState.move;
+    public Dot CurrentDot;
 
     private BackgroundTile[,] _allTiles;
     private FindMatces _findMatces;
@@ -111,6 +112,11 @@ public class Board : MonoBehaviour
     {
         if (AllDots[column, row].GetComponent<Dot>().IsMatched)
         {
+            //How many elements are in the matched pieces list from findmatches?
+            if(_findMatces.CurrentMatches.Count == 4 || _findMatces.CurrentMatches.Count == 7)
+            {
+                _findMatces.CheckBombs();
+            }
             _findMatces.CurrentMatches.Remove(AllDots[column, row]);
             GameObject particle = Instantiate(DestroyEffect, AllDots[column, row].transform.position, Quaternion.identity);
             Destroy(particle, 0.5f );
@@ -203,6 +209,8 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             DestroyMatches();
         }
+        _findMatces.CurrentMatches.Clear();
+        CurrentDot = null;
         yield return new WaitForSeconds(0.5f);
         CurreState = GameState.move;
     } 

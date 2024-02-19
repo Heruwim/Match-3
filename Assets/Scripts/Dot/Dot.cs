@@ -21,7 +21,7 @@ public class Dot : MonoBehaviour
     private Vector2 _firstTouchPosition;
     private Vector2 _finalTouchPosition;
     private Vector2 _tempPosition;
-    private GameObject _otherDot;
+    public GameObject OtherDot;
     private Board _board;
 
     [Header("Powerup Stuff")]
@@ -72,14 +72,15 @@ public class Dot : MonoBehaviour
     }
     private void Update()
     {
-        if (_isMatched)
+        /*if (_isMatched)
         {
             SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
             mySprite.color = new Color(1f, 1f, 1f, 0.2f);
         }
+        */
         _targetX = _column;
         _targetY = _row;
-
+        
         if(Mathf.Abs(_targetX - transform.position.x) < 0.1)
         {
             //Move towards the target
@@ -124,22 +125,23 @@ public class Dot : MonoBehaviour
     public IEnumerator CheckMoveCorutine()
     {
         yield return new WaitForSeconds(0.5f);
-        if (_otherDot != null)
+        if (OtherDot != null)
         {
-            if (!_isMatched && !_otherDot.GetComponent<Dot>()._isMatched)
+            if (!_isMatched && !OtherDot.GetComponent<Dot>()._isMatched)
             {
-                _otherDot.GetComponent<Dot>()._row = _row;
-                _otherDot.GetComponent<Dot>()._column = _column;
+                OtherDot.GetComponent<Dot>()._row = _row;
+                OtherDot.GetComponent<Dot>()._column = _column;
                 _row = _previousRow; 
                 _column = _previousColumn;
                 yield return new WaitForSeconds(0.5f);
+                _board.CurrentDot = null;
                 _board.CurreState = GameState.move;
             }
             else
             {
                 _board.DestroyMatches();
             }
-            _otherDot = null;
+            //_otherDot = null;
         }
     }
 
@@ -169,6 +171,7 @@ public class Dot : MonoBehaviour
             _swipeAngle = Mathf.Atan2(_finalTouchPosition.y - _firstTouchPosition.y, _finalTouchPosition.x - _firstTouchPosition.x) * 180 / Mathf.PI;
             MovePieces();
             _board.CurreState = GameState.wait;
+            _board.CurrentDot = this;
         }
         else
         {
@@ -181,37 +184,37 @@ public class Dot : MonoBehaviour
         if(_swipeAngle > -45 && _swipeAngle <= 45 && _column < _board.Width - 1)
         {
             //Right swipe
-            _otherDot = _board.AllDots[_column + 1, _row];
+            OtherDot = _board.AllDots[_column + 1, _row];
             _previousColumn = _column;
             _previousRow = _row;
-            _otherDot.GetComponent<Dot>()._column -= 1;
+            OtherDot.GetComponent<Dot>()._column -= 1;
             _column += 1;
         }
         else if(_swipeAngle > 45 && _swipeAngle <= 135 && _row < _board.Height - 1)
         {
             //Up swipe
-            _otherDot = _board.AllDots[_column, _row + 1];
+            OtherDot = _board.AllDots[_column, _row + 1];
             _previousColumn = _column;
             _previousRow = _row;
-            _otherDot.GetComponent<Dot>()._row -= 1;
+            OtherDot.GetComponent<Dot>()._row -= 1;
             _row += 1;
         }
         else if ((_swipeAngle > 135 || _swipeAngle <= -135) && _column > 0)
         {
             //Left swipe
-            _otherDot = _board.AllDots[_column - 1, _row];
+            OtherDot = _board.AllDots[_column - 1, _row];
             _previousColumn = _column;
             _previousRow = _row;
-            _otherDot.GetComponent<Dot>()._column += 1;
+            OtherDot.GetComponent<Dot>()._column += 1;
             _column -= 1;
         }
         else if (_swipeAngle < -45 && _swipeAngle >= -135 && _row > 0)
         {
             //Down swipe
-            _otherDot = _board.AllDots[_column, _row - 1];
+            OtherDot = _board.AllDots[_column, _row - 1];
             _previousColumn = _column;
             _previousRow = _row;
-            _otherDot.GetComponent<Dot>()._row += 1;
+            OtherDot.GetComponent<Dot>()._row += 1;
             _row -= 1;
         }
 
@@ -249,5 +252,19 @@ public class Dot : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void MakeRowBomb()
+    {
+        IsRowBomb = true;
+        GameObject arrow = Instantiate(_rowArrow, transform.position, Quaternion.identity);
+        arrow.transform.parent = this.transform;
+    }
+    
+    public void MakeColumnBomb()
+    {
+        IsColumnBomb = true;
+        GameObject arrow = Instantiate(_colunmArrow, transform.position, Quaternion.identity);
+        arrow.transform.parent = this.transform;
     }
 }

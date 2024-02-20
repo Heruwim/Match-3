@@ -27,7 +27,9 @@ public class Dot : MonoBehaviour
     [Header("Powerup Stuff")]
     [SerializeField] private GameObject _rowArrow;
     [SerializeField] private GameObject _colunmArrow;
+    [SerializeField] private GameObject _colorBomb;
 
+    public bool IsColorBomb;
     public bool IsColumnBomb;
     public bool IsRowBomb;
     public bool IsMatched
@@ -45,6 +47,12 @@ public class Dot : MonoBehaviour
     {
         get => _column;
         set => _column = value;
+    }
+
+    public float SwipeAngle
+    {
+        get => _swipeAngle; 
+        private set => _swipeAngle = value;
     }
 
     private void Start()
@@ -65,9 +73,9 @@ public class Dot : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            IsRowBomb = true;
-            GameObject arrow = Instantiate(_rowArrow, transform.position, Quaternion.identity);
-            arrow.transform.parent = this.transform;
+            IsColorBomb = true;
+            GameObject color = Instantiate(_colorBomb, transform.position, Quaternion.identity);
+            color.transform.parent = this.transform;
         }
     }
     private void Update()
@@ -124,6 +132,18 @@ public class Dot : MonoBehaviour
 
     public IEnumerator CheckMoveCorutine()
     {
+        if(IsColorBomb)
+        {
+            // This piece is color bomb, and the other piece is the color to destroy
+            _findMatces.MatchPiecesOfColor(OtherDot.tag);
+            IsMatched = true;
+        }
+        else if (OtherDot.GetComponent<Dot>().IsColorBomb)
+        {
+            // Other piece is a color bomb, and this piece has the color to destroy
+            _findMatces.MatchPiecesOfColor(this.gameObject.tag);
+            OtherDot.GetComponent<Dot>().IsMatched = true;
+        }
         yield return new WaitForSeconds(0.5f);
         if (OtherDot != null)
         {

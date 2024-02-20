@@ -19,6 +19,64 @@ public class FindMatces : MonoBehaviour
         StartCoroutine(FindAllMatchesCorutine());
     }
 
+    private List<GameObject> IsRowBomb(Dot dot1, Dot dot2, Dot dot3)
+    {
+        List<GameObject> currentDots = new List<GameObject>();
+        if (dot1.IsRowBomb)
+        {
+            CurrentMatches.Union(GetRowPieces(dot1.Row));
+        }
+
+        if (dot2.IsRowBomb)
+        {
+            CurrentMatches.Union(GetRowPieces(dot2.Row));
+        }
+
+        if (dot3.IsRowBomb)
+        {
+            CurrentMatches.Union(GetRowPieces(dot3.Row));
+        }
+
+        return currentDots;
+    }
+    
+    private List<GameObject> IsColumnBomb(Dot dot1, Dot dot2, Dot dot3)
+    {
+        List<GameObject> currentDots = new List<GameObject>();
+        if (dot1.IsColumnBomb)
+        {
+            CurrentMatches.Union(GetColumnPieces(dot1.Column));
+        }
+
+        if (dot2.IsColumnBomb)
+        {
+            CurrentMatches.Union(GetColumnPieces(dot2.Column));
+        }
+
+        if (dot3.IsColumnBomb)
+        {
+            CurrentMatches.Union(GetColumnPieces(dot3.Column));
+        }
+
+        return currentDots;
+    }
+
+    private void AddToListAndMatch(GameObject dot)
+    {
+        if (!CurrentMatches.Contains(dot))
+        {
+            CurrentMatches.Add(dot);
+        }
+        dot.GetComponent<Dot>().IsMatched = true;
+    }
+
+    private void GetNearByPieces(GameObject dot1, GameObject dot2, GameObject dot3)
+    {
+        AddToListAndMatch(dot1);
+        AddToListAndMatch(dot2);
+        AddToListAndMatch(dot3);
+    }
+
     private IEnumerator FindAllMatchesCorutine()
     {
         yield return new WaitForSeconds(0.2f);
@@ -29,52 +87,20 @@ public class FindMatces : MonoBehaviour
                 GameObject currentDot = _board.AllDots[i, j];
                 if (currentDot != null)
                 {
+                    Dot currentDotDot = currentDot.GetComponent<Dot>();
                     if(i > 0 && i < _board.Width - 1)
                     {
                         GameObject leftDot = _board.AllDots[i - 1, j];
                         GameObject rightDot = _board.AllDots[i + 1, j];
                         if(leftDot != null && rightDot != null)
                         {
+                            Dot leftDotDot = leftDot.GetComponent<Dot>();
+                            Dot rightDotDot = rightDot.GetComponent<Dot>();
                             if(leftDot.tag == currentDot.tag && rightDot.tag == currentDot.tag)
                             {
-                                if(currentDot.GetComponent<Dot>().IsRowBomb
-                                    || leftDot.GetComponent<Dot>().IsRowBomb
-                                    || rightDot.GetComponent<Dot>().IsRowBomb)
-                                {
-                                    CurrentMatches.Union(GetRowPieces(j));
-                                }
-
-                                if (currentDot.GetComponent<Dot>().IsColumnBomb)
-                                {
-                                    CurrentMatches.Union(GetColumnPieces(i));
-                                }
-
-                                if (leftDot.GetComponent<Dot>().IsColumnBomb)
-                                {
-                                    CurrentMatches.Union(GetColumnPieces(i - 1));
-                                }
-
-                                if (rightDot.GetComponent<Dot>().IsColumnBomb)
-                                {
-                                    CurrentMatches.Union(GetColumnPieces(i + 1));
-                                }
-
-                                if (!CurrentMatches.Contains(leftDot))
-                                {
-                                    CurrentMatches.Add(leftDot);
-                                }
-                                leftDot.GetComponent<Dot>().IsMatched = true;
-
-                                if (!CurrentMatches.Contains(rightDot))
-                                {
-                                    CurrentMatches.Add(rightDot);
-                                }
-                                rightDot.GetComponent<Dot>().IsMatched = true;
-                                if (!CurrentMatches.Contains(currentDot))
-                                {
-                                    CurrentMatches.Add(currentDot);
-                                }
-                                currentDot.GetComponent<Dot>().IsMatched = true;
+                                CurrentMatches.Union(IsRowBomb(leftDotDot, currentDotDot, rightDotDot));
+                                CurrentMatches.Union(IsColumnBomb(leftDotDot, currentDotDot,  rightDotDot));
+                                GetNearByPieces(leftDot, currentDot, rightDot);                  
                             }
                         }
                     }
@@ -85,45 +111,14 @@ public class FindMatces : MonoBehaviour
                         GameObject downDot = _board.AllDots[i, j - 1];
                         if (upDot != null && downDot != null)
                         {
+                            Dot upDotDot = upDot.GetComponent<Dot>();
+                            Dot downDotDot = downDot.GetComponent<Dot>();
                             if (upDot.tag == currentDot.tag && downDot.tag == currentDot.tag)
                             {
-                                if (currentDot.GetComponent<Dot>().IsColumnBomb
-                                    || upDot.GetComponent<Dot>().IsColumnBomb
-                                    || downDot.GetComponent<Dot>().IsColumnBomb)
-                                {
-                                    CurrentMatches.Union(GetColumnPieces(i));
-                                }
-
-                                if (currentDot.GetComponent<Dot>().IsRowBomb)
-                                {
-                                    CurrentMatches.Union(GetRowPieces(j));
-                                }
-
-                                if (upDot.GetComponent<Dot>().IsRowBomb)
-                                {
-                                    CurrentMatches.Union(GetRowPieces(j + 1));
-                                }
-
-                                if (downDot.GetComponent<Dot>().IsRowBomb)
-                                {
-                                    CurrentMatches.Union(GetRowPieces(j - 1));
-                                }
-
-                                if (!CurrentMatches.Contains(upDot))
-                                {
-                                    CurrentMatches.Add(upDot);
-                                }
-                                upDot.GetComponent<Dot>().IsMatched = true;
-                                if (!CurrentMatches.Contains(downDot))
-                                {
-                                    CurrentMatches.Add(downDot);
-                                }
-                                downDot.GetComponent<Dot>().IsMatched = true;
-                                if (!CurrentMatches.Contains(currentDot))
-                                {
-                                    CurrentMatches.Add(currentDot);
-                                }
-                                currentDot.GetComponent<Dot>().IsMatched = true;
+                                CurrentMatches.Union(IsColumnBomb(upDotDot, currentDotDot,  downDotDot));
+                                CurrentMatches.Union(IsRowBomb(upDotDot, currentDotDot, downDotDot));
+                                GetNearByPieces(upDot, currentDot, downDot);
+                               
                             }
                         }
                     }
@@ -146,6 +141,27 @@ public class FindMatces : MonoBehaviour
 
         return dots;
     }
+
+    public void MatchPiecesOfColor(string color)
+    {
+        for (int i = 0; i < _board.Width; i++)
+        {
+            for (int j = 0; j < _board.Height; j++)
+            {
+                //Check is the piece exists
+                if(_board.AllDots[i, j] != null)
+                {
+                    // Check the tag on that dot
+                    if (_board.AllDots[i, j].tag == color)
+                    {
+                        // Set the dot to be matched
+                        _board.AllDots[i, j ].GetComponent<Dot>().IsMatched = true;
+                    }
+                }
+            }
+        }
+    }
+
     private List<GameObject> GetRowPieces(int row)
     {
         List<GameObject> dots = new List<GameObject>();
@@ -172,6 +188,7 @@ public class FindMatces : MonoBehaviour
                 // Make it unmatched
                 _board.CurrentDot.IsMatched = false;
                 // Decide what kind of bomb to make
+                /*
                 int typeOfBomb = Random.Range(0, 100);
                 if (typeOfBomb < 50)
                 {
@@ -181,6 +198,16 @@ public class FindMatces : MonoBehaviour
                 else if (typeOfBomb >= 50)
                 {
                     // Make a column bomb
+                    _board.CurrentDot.MakeColumnBomb();
+                }
+                */
+                if((_board.CurrentDot.SwipeAngle > -45 && _board.CurrentDot.SwipeAngle <= 45)
+                    || (_board.CurrentDot.SwipeAngle < -135 && _board.CurrentDot.SwipeAngle >= 135))
+                {
+                    _board.CurrentDot.MakeRowBomb();
+                }
+                else
+                {
                     _board.CurrentDot.MakeColumnBomb();
                 }
             }
@@ -193,17 +220,28 @@ public class FindMatces : MonoBehaviour
                 {
                     // Make it unmatched
                     otherDot.IsMatched = false;
+                    /*
                     // Deside what kind of bomb to make
                     int typeOfBomb = Random.Range(0, 100);
                     if (typeOfBomb < 50)
                     {
                         // Make a row bomb
-                        otherDot.MakeRowBomb();
+                        otherDot.OtherDot.GetComponent<Dot>().MakeRowBomb();
                     }
                     else if (typeOfBomb >= 50)
                     {
                         // Make a column bomb
-                        otherDot.MakeColumnBomb();
+                        otherDot.OtherDot.GetComponent<Dot>().MakeColumnBomb();
+                    }
+                    */
+                    if ((_board.CurrentDot.SwipeAngle > -45 && _board.CurrentDot.SwipeAngle <= 45)
+                    || (_board.CurrentDot.SwipeAngle < -135 && _board.CurrentDot.SwipeAngle >= 135))
+                    {
+                        otherDot.GetComponent<Dot>().MakeRowBomb();
+                    }
+                    else
+                    {
+                        otherDot.GetComponent<Dot>().MakeColumnBomb();
                     }
                 }
             }

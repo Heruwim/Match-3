@@ -143,7 +143,10 @@ MonoBehaviour:
   _targetX: 0
   _targetY: 0
   _isMatched: 0
+  OtherDot: {fileID: 0}
   _rowArrow: {fileID: 2442788288532245022, guid: 3673a1362b3ed0745a5947d57087f6d8, type: 3}
   _colunmArrow: {fileID: 6353552356156983976, guid: 16c02eba3386e204e88a51bea65019c8, type: 3}
+  _colorBomb: {fileID: 6640557245953873535, guid: 0a2b336ec6c59d5429aa64ef95e12e3f, type: 3}
+  IsColorBomb: 0
   IsColumnBomb: 0
   IsRowBomb: 0

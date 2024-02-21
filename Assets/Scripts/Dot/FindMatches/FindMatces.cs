@@ -19,6 +19,27 @@ public class FindMatces : MonoBehaviour
         StartCoroutine(FindAllMatchesCorutine());
     }
 
+    private List<GameObject> IsAdjacentBomb(Dot dot1, Dot dot2, Dot dot3)
+    {
+        List<GameObject> currentDots = new List<GameObject>();
+        if (dot1.IsAdjacentBomb)
+        {
+            CurrentMatches.Union(GetAdjacentPieces(dot1.Column, dot1.Row));
+        }
+
+        if (dot2.IsAdjacentBomb)
+        {
+            CurrentMatches.Union(GetAdjacentPieces(dot2.Column, dot2.Row));
+        }
+
+        if (dot3.IsAdjacentBomb)
+        {
+            CurrentMatches.Union(GetAdjacentPieces(dot3.Column, dot3.Row));
+        }
+
+        return currentDots;
+    }
+
     private List<GameObject> IsRowBomb(Dot dot1, Dot dot2, Dot dot3)
     {
         List<GameObject> currentDots = new List<GameObject>();
@@ -100,6 +121,7 @@ public class FindMatces : MonoBehaviour
                             {
                                 CurrentMatches.Union(IsRowBomb(leftDotDot, currentDotDot, rightDotDot));
                                 CurrentMatches.Union(IsColumnBomb(leftDotDot, currentDotDot,  rightDotDot));
+                                CurrentMatches.Union(IsAdjacentBomb(leftDotDot, currentDotDot,  rightDotDot));
                                 GetNearByPieces(leftDot, currentDot, rightDot);                  
                             }
                         }
@@ -117,6 +139,7 @@ public class FindMatces : MonoBehaviour
                             {
                                 CurrentMatches.Union(IsColumnBomb(upDotDot, currentDotDot,  downDotDot));
                                 CurrentMatches.Union(IsRowBomb(upDotDot, currentDotDot, downDotDot));
+                                CurrentMatches.Union(IsAdjacentBomb(upDotDot, currentDotDot, downDotDot));
                                 GetNearByPieces(upDot, currentDot, downDot);
                                
                             }
@@ -125,6 +148,24 @@ public class FindMatces : MonoBehaviour
                 }
             }
         }
+    }
+
+    private List<GameObject> GetAdjacentPieces(int column, int row)
+    {
+        List<GameObject> dots = new List<GameObject>();
+        for (int i = column - 1; i <= column + 1; i++)
+        {
+            for (int j = row - 1; j <= row + 1; j++)
+            {
+                // Check if the piece is inside the board
+                if(i >= 0 && i < _board.Width && j >= 0 && j < _board.Height)
+                {
+                    dots.Add(_board.AllDots[i, j]);
+                    _board.AllDots[i, j].GetComponent<Dot>().IsMatched = true;
+                }
+            }
+        }
+        return dots;
     }
 
     private List<GameObject> GetColumnPieces(int column)

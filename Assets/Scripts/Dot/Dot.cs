@@ -28,10 +28,12 @@ public class Dot : MonoBehaviour
     [SerializeField] private GameObject _rowArrow;
     [SerializeField] private GameObject _colunmArrow;
     [SerializeField] private GameObject _colorBomb;
+    [SerializeField] private GameObject _adjacentMarker;
 
     public bool IsColorBomb;
     public bool IsColumnBomb;
     public bool IsRowBomb;
+    public bool IsAdjacentBomb;
     public bool IsMatched
     {
         get => _isMatched;
@@ -59,6 +61,8 @@ public class Dot : MonoBehaviour
     {
         IsColumnBomb = false;
         IsRowBomb = false;
+        IsColorBomb = false;
+        IsAdjacentBomb = false;
         _board = FindObjectOfType<Board>();
         _findMatces = FindObjectOfType<FindMatces>();
         //_targetX = (int)transform.position.x;
@@ -73,9 +77,9 @@ public class Dot : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            IsColorBomb = true;
-            GameObject color = Instantiate(_colorBomb, transform.position, Quaternion.identity);
-            color.transform.parent = this.transform;
+            IsAdjacentBomb = true;
+            GameObject marker = Instantiate(_adjacentMarker, transform.position, Quaternion.identity);
+            marker.transform.parent = this.transform;
         }
     }
     private void Update()
